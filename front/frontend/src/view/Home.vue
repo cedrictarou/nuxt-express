@@ -9,12 +9,11 @@
         </form>
       </div>
       <div>
-        <h2>My todos</h2>
+        <h2>My todos {{ totalTodos }}</h2>
         <table class="table">
           <thead>
             <tr>
               <th>Check</th>
-              <th>No</th>
               <th>Task</th>
               <th>Edit</th>
               <th>Delete</th>
@@ -27,7 +26,6 @@
               :class="{ done: todo.isDone }"
             >
               <td><input type="checkbox" v-model="todo.isDone" /></td>
-              <td>{{ todo.id }} :</td>
               <td>{{ todo.taskName }}</td>
               <td>
                 <button @click="editTodo(index)">edit</button>
@@ -49,14 +47,18 @@ export default {
   data() {
     return {
       taskName: "",
-      todos: [],
     };
   },
   created() {
-    this.axios.get("http://localhost:3000/api/todos").then((response) => {
-      const gotTodos = response.data.todos;
-      this.todos.push(...gotTodos);
-    });
+    this.$store.dispatch("getTodosFromApi");
+  },
+  computed: {
+    todos() {
+      return this.$store.getters.todos;
+    },
+    totalTodos() {
+      return this.todos.length;
+    },
   },
   methods: {
     addNewTodo() {
@@ -67,9 +69,10 @@ export default {
       };
       this.todos.push(newTodo);
       this.taskName = "";
+      // axiosを使ってサーバーに追加する処理が必要
+      // return this.$store.commit("setNewTodo");
     },
     editTodo(index) {
-      console.log("edit item", this.todos[index]);
       const editedTaskName = prompt(
         "Edit your task.",
         this.todos[index].taskName
@@ -79,12 +82,16 @@ export default {
       } else {
         this.todos[index].taskName = editedTaskName;
       }
+      // axiosを使ってサーバーに追加する処理が必要
+      // return this.$store.commit("setNewTodo");
     },
     deleteTodo(index) {
       const msg = "Are you scure?";
       const result = confirm(msg);
       if (result) {
         this.todos.splice(index, 1);
+        // axiosを使ってサーバーに追加する処理が必要
+        // return this.$store.commit("setNewTodo");
       } else {
         return;
       }
@@ -95,7 +102,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  width: 80%;
+  width: 400px;
   margin: 0 auto;
 }
 h3 {
