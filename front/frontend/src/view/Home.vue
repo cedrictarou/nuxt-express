@@ -25,7 +25,13 @@
               :key="todo.id"
               :class="{ done: todo.isDone }"
             >
-              <td><input type="checkbox" v-model="todo.isDone" /></td>
+              <td>
+                <input
+                  type="checkbox"
+                  v-model="todo.isDone"
+                  @click="changeIsDone(index)"
+                />
+              </td>
               <td>{{ todo.taskName }}</td>
               <td>
                 <button @click="editTodo(index)">edit</button>
@@ -92,6 +98,11 @@ export default {
       } else {
         return;
       }
+    },
+    changeIsDone(index) {
+      // console.log(this.todos[index]);
+      const editedTodo = this.todos[index];
+      return this.$store.dispatch("editTodoToApi", editedTodo);
     },
   },
 };

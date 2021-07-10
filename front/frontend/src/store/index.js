@@ -30,10 +30,7 @@ const store = new Vuex.Store({
       axios.post(BASE_API, newTodo);
     },
     editTodoToApi(content, editedTodo) {
-      axios.put(BASE_API, editedTodo).then((response) => {
-        const msg = response.data.msg;
-        alert(msg);
-      });
+      axios.put(BASE_API, editedTodo);
     },
     deleteTodoFromApi(content, deleteTodoIndex) {
       axios.delete(`${BASE_API}/${deleteTodoIndex}`).then((response) => {
