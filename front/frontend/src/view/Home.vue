@@ -4,7 +4,7 @@
     <div>
       <div>
         <form>
-          <input type="text" v-model="taskName" />
+          <input type="text" v-model="taskName" name="taskName" />
           <button @click.prevent="addNewTodo()">Add</button>
         </form>
       </div>
@@ -63,14 +63,12 @@ export default {
   methods: {
     addNewTodo() {
       const newTodo = {
-        id: this.todos.length + 1,
         taskName: this.taskName,
         isDone: false,
       };
       this.todos.push(newTodo);
       this.taskName = "";
-      // axiosを使ってサーバーに追加する処理が必要
-      // return this.$store.commit("setNewTodo");
+      this.$store.dispatch("addNewTodoToApi", newTodo);
     },
     editTodo(index) {
       const editedTaskName = prompt(
@@ -82,16 +80,15 @@ export default {
       } else {
         this.todos[index].taskName = editedTaskName;
       }
-      // axiosを使ってサーバーに追加する処理が必要
-      // return this.$store.commit("setNewTodo");
+      const editedTodo = this.todos[index];
+      return this.$store.dispatch("editTodoToApi", editedTodo);
     },
     deleteTodo(index) {
       const msg = "Are you scure?";
       const result = confirm(msg);
       if (result) {
         this.todos.splice(index, 1);
-        // axiosを使ってサーバーに追加する処理が必要
-        // return this.$store.commit("setNewTodo");
+        return this.$store.dispatch("deleteTodoFromApi", index);
       } else {
         return;
       }
